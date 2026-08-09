@@ -14,8 +14,13 @@ public class CustomerServiceController {
 
     @GetMapping("/customer/1")
     public String getCustomer() {
-        String profileServiceUrl = "http://localhost:8081/profile/1";
-        String profileResponse = restTemplate.getForObject(profileServiceUrl, String.class);
-        return "Customer service working. Profile service response: " + profileResponse;
+        try {
+            String profileServiceUrl = "http://localhost:8081/profile/1";
+            String profileResponse = restTemplate.getForObject(profileServiceUrl, String.class);
+            return "Customer service working. Profile service response: " + profileResponse;
+        }
+        catch (Exception e){
+            return "Profile service is temporarily unavailable. Please try again later.";
+        }
     }
 }
