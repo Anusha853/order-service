@@ -1,4 +1,4 @@
-package com.q1.customer.config;
+package com.q1.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

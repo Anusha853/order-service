@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: order-service
+  main:
+    lazy-initialization: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.q1.order.client: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
