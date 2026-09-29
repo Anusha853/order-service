@@ -18,3 +18,19 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventoryServiceCircuitBreaker:
+        # Sliding Window Configuration
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 6
+        minimum-number-of-calls: 3
+        # Failure Threshold
+        failure-rate-threshold: 50
+        # Open State Configuration
+        wait-duration-in-open-state: 10s
+        # Half Open Configuration
+        permitted-number-of-calls-in-half-open-state: 3
+        max-wait-duration-in-half-open-state: 5s
+        automatic-transition-from-open-to-half-open-enabled: true

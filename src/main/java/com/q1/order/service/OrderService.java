@@ -34,11 +34,11 @@ public class OrderService {
 
         Inventory inventory = inventoryService.getInventory(productId);
         int quantity = inventory.getQuantity();
+        if(quantity <=0)
+            return "Product Out Of Stock";
         updateInventory(inventory);
 
-        return  quantity>0?
-                "Order Placed Successfully":
-                "Product Out Of Stock";
+        return "Order Placed Successfully";
     }
 
     private void updateInventory(Inventory inventory) {
