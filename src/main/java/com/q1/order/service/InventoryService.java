@@ -20,11 +20,6 @@ public class InventoryService {
         System.out.println("Calling Inventory Service for productId: " + productId);
         return inventoryClient.getInventory(productId);
     }
-    public Inventory circuitBreakerFallbackMethod(Long productId, Throwable throwable){
-        System.out.println("Fallback Method Called for productId: " + productId);
-        return new Inventory(productId.toString(),0);
-    }
-
 
 
 }
