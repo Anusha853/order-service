@@ -3,6 +3,13 @@ spring:
     name: order-service
   main:
     lazy-initialization: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          inventory-service:
+            connect-timeout: 2000
+            read-timeout: 30000
 
 server:
   port: 8080
@@ -19,18 +26,14 @@ eureka:
       defaultZone: http://localhost:8761/eureka
 
 resilience4j:
-  circuitbreaker:
+  bulkhead:
     instances:
-      inventoryServiceCircuitBreaker:
-        # Sliding Window Configuration
-        sliding-window-type: COUNT_BASED
-        sliding-window-size: 6
-        minimum-number-of-calls: 3
-        # Failure Threshold
-        failure-rate-threshold: 50
-        # Open State Configuration
-        wait-duration-in-open-state: 10s
-        # Half Open Configuration
-        permitted-number-of-calls-in-half-open-state: 3
-        max-wait-duration-in-half-open-state: 5s
-        automatic-transition-from-open-to-half-open-enabled: true
+      inventoryServiceBulkhead:
+        maxConcurrentCalls: 2
+        maxWaitDuration: 10s
+  thread-pool-bulkhead:
+    instances:
+      inventoryServiceBulkhead:
+        core-thread-pool-size: 1
+        max-thread-pool-size: 3
+        queue-capacity: 1

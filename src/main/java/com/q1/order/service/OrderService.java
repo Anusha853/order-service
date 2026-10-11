@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class OrderService {
@@ -30,9 +31,10 @@ public class OrderService {
         this.inventoryService = inventoryService;
     }
 
-    public String placeOrder(Long productId){
+    public String placeOrder(Long productId) throws ExecutionException, InterruptedException {
 
-        Inventory inventory = inventoryService.getInventory(productId);
+        //Inventory inventory = inventoryService.getInventory(productId);
+        Inventory inventory = inventoryService.getInventory(productId).get(); //to be used for CompletableFuture in thread pool pattern
         int quantity = inventory.getQuantity();
         if(quantity <=0)
             return "Product Out Of Stock";
