@@ -18,3 +18,10 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+resilience4j:
+  ratelimiter:
+    instances:
+      inventoryService:
+        limit-for-period: 2
+        limit-refresh-period: 10s
+        timeout-duration: 0s
