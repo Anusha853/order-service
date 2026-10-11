@@ -3,9 +3,12 @@ package com.q1.order.service;
 import com.q1.order.client.InventoryClient;
 import com.q1.order.dto.Inventory;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class InventoryService {
@@ -17,14 +20,15 @@ public class InventoryService {
     }
 
     /*@Retryable(retryFor = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 2000))*/
-    @RateLimiter(name="inventoryService", fallbackMethod = "fallbackGetInventory")
-    public Inventory getInventory(Long productId) {
+    @TimeLimiter(name = "inventoryService", fallbackMethod = "fallbackGetInventory")
+    public CompletableFuture<Inventory> getInventory(Long productId) {
         System.out.println("Calling Inventory Service for productId: " + productId);
-        return inventoryClient.getInventory(productId);
+        return CompletableFuture.supplyAsync(() -> inventoryClient.getInventory(productId));
     }
 
-    public Inventory fallbackGetInventory(Long productId, Throwable throwable) {
+    public CompletableFuture<Inventory> fallbackGetInventory(Long productId, Throwable throwable) {
         System.out.println("Fallback method called for productId: " + productId);
-        return new Inventory(productId.toString(), 0);
+        Inventory inventory = new Inventory(productId.toString(), 0);
+        return CompletableFuture.completedFuture(inventory);
     }
 }

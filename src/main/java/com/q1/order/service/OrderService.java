@@ -32,7 +32,7 @@ public class OrderService {
 
     public String placeOrder(Long productId){
 
-        Inventory inventory = inventoryService.getInventory(productId);
+        Inventory inventory = inventoryService.getInventory(productId).join();
         int quantity = inventory.getQuantity();
         updateInventory(inventory);
 
